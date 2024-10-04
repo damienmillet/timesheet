@@ -14,7 +14,7 @@ interface TimeRow {
 }
 
 export default function TimeForm() {
-  const [rows, setRows] = useState<TimeRow[]>([{ day: new Date().toISOString().split('T')[0], startTime: '00:00', endTime: '00:00', isValid: true, errorMessage: null, dateError: null }]);
+  const [rows, setRows] = useState<TimeRow[]>([{ day: new Date().toISOString().split('T')[0], startTime: '00:00', endTime: '20:00', isValid: true, errorMessage: null, dateError: null }]);
   const [totalTime, setTotalTime] = useState<string | null>(null);
   const [globalErrorMessage, setGlobalErrorMessage] = useState<string | null>(null);
   const [includeWeekends, setIncludeWeekends] = useState<boolean>(false);
@@ -36,7 +36,7 @@ export default function TimeForm() {
     const newRow: TimeRow = {
       day: new Date().toISOString().split('T')[0], // Format YYYY-MM-DD
       startTime: '00:00',
-      endTime: '00:00',
+      endTime: '20:00',
       isValid: true,
       errorMessage: null,
       dateError: null
@@ -90,7 +90,7 @@ export default function TimeForm() {
 
       if (startTime && endTime && endTime <= startTime) {
         newRows[index].isValid = false;
-        newRows[index].errorMessage = `L'heure de sortie doit être supérieure à l'heure d'entrée pour la ligne ${index + 1}.`;
+        newRows[index].errorMessage = `L'heure de sortie doit être supérieure à l'heure d'entrée.`;
       } else {
         newRows[index].isValid = true;
         newRows[index].errorMessage = null;
@@ -221,7 +221,7 @@ export default function TimeForm() {
           </div>
         )}
       </div>
-      <p className="mt-4">Astuce : utilisez la touche <span className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"><b>Tab</b></span> pour changer de cellule rapidement.</p>
+      <p className="mt-4 text-center">Astuce : utilisez la touche <span className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"><b>Tab</b></span> pour changer de cellule rapidement.</p>
     </div>
   );
 }
