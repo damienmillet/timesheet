@@ -69,7 +69,7 @@ export default function TimeForm() {
     setRows(newRows);
   };
 
-  const handleRowChange = (index: number, field: keyof TimeRow, value: string) => {
+  const handleRowChange = <K extends keyof TimeRow>(index: number, field: K, value: TimeRow[K]) => {
     const newRows = [...rows];
     newRows[index][field] = value;
 
@@ -79,7 +79,7 @@ export default function TimeForm() {
       const tomorrow = new Date();
       tomorrow.setDate(today.getDate() + 1); // Date de demain
 
-      const inputDate = new Date(value);
+      const inputDate = new Date(value as string);
 
       if (inputDate >= tomorrow) {
         newRows[index].isValid = false;
