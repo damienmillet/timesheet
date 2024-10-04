@@ -1,5 +1,4 @@
 "use client"
-"use client"
 
 import { useState, useEffect } from 'react';
 import { addOneDay } from '@/lib/date';
@@ -63,6 +62,11 @@ export default function TimeForm() {
   const handleDeleteRow = (index: number) => {
     const newRows = rows.filter((_, rowIndex) => rowIndex !== index);
     setRows(newRows);
+  };
+
+  const handleDeleteAllRows = () => {
+    setRows([]); // Supprimer toutes les lignes
+    setRows([{ day: new Date().toISOString().split('T')[0], startTime: '00:00', endTime: '20:00', isValid: true, errorMessage: null, dateError: null }]); // Ajouter une nouvelle ligne
   };
 
   const handleRowChange = <K extends keyof TimeRow>(index: number, field: K, value: TimeRow[K]) => {
@@ -202,6 +206,9 @@ export default function TimeForm() {
           <div className="flex justify-between mt-4">
             <button type="button" onClick={handleAddRow} className="bg-emerald-600 rounded-md px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition">
               Ajouter
+            </button>
+            <button type="button" onClick={handleDeleteAllRows} className="bg-red-600 rounded-md px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition">
+              Nettoyer
             </button>
             <button type="submit" className="bg-indigo-600 rounded-md px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition">
               Calculer
