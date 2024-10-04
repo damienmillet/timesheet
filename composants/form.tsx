@@ -236,6 +236,8 @@ export default function TimeForm() {
         </button>
       </form>
 
+      <p>astuce : utilise la touche <span className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"><b>Tab</b></span> pour changer de cellule rapidement.</p>
+
       {totalTime && (
         <div className="mt-4 p-4 bg-gray-100 text-gray-700 rounded-md">
           Temps total : {totalTime}
