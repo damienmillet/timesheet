@@ -1,5 +1,7 @@
 "use client"
 
+"use client"
+
 import { useState, useEffect } from 'react';
 import { addOneDay } from '@/lib/date';
 
@@ -13,12 +15,14 @@ interface TimeRow {
 }
 
 export default function TimeForm() {
-  const [rows, setRows] = useState<TimeRow[]>([{ day: new Date().toISOString().split('T')[0], startTime: '00:00', endTime: '20:00', isValid: true, errorMessage: null, dateError: null }]);
+  const [rows, setRows] = useState<TimeRow[]>(() => {
+    const savedRows = localStorage.getItem('timeRows');
+    return savedRows ? JSON.parse(savedRows) : [{ day: new Date().toISOString().split('T')[0], startTime: '00:00', endTime: '20:00', isValid: true, errorMessage: null, dateError: null }];
+  });
   const [totalTime, setTotalTime] = useState<string | null>(null);
   const [globalErrorMessage, setGlobalErrorMessage] = useState<string | null>(null);
   const [includeWeekends, setIncludeWeekends] = useState<boolean>(false);
 
-  // Ajout d'un event listener pour Ctrl + "+"
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (e.ctrlKey && e.key === '+') {
@@ -29,11 +33,16 @@ export default function TimeForm() {
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [rows]); // Ajouter une dépendance pour la liste des lignes
+  }, [rows]);
+
+  // Save rows to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('timeRows', JSON.stringify(rows));
+  }, [rows]);
 
   const handleAddRow = () => {
     const newRow: TimeRow = {
-      day: new Date().toISOString().split('T')[0], // Format YYYY-MM-DD
+      day: new Date().toISOString().split('T')[0],
       startTime: '00:00',
       endTime: '20:00',
       isValid: true,
@@ -48,10 +57,10 @@ export default function TimeForm() {
 
     if (!includeWeekends) {
       const newDate = new Date(newRow.day);
-      if (newDate.getDay() === 6) { // Samedi
-        newDate.setDate(newDate.getDate() + 2); // Passer au lundi
-      } else if (newDate.getDay() === 0) { // Dimanche
-        newDate.setDate(newDate.getDate() + 1); // Passer au lundi
+      if (newDate.getDay() === 6) {
+        newDate.setDate(newDate.getDate() + 2);
+      } else if (newDate.getDay() === 0) {
+        newDate.setDate(newDate.getDate() + 1);
       }
       newRow.day = newDate.toISOString().split('T')[0];
     }
@@ -65,8 +74,7 @@ export default function TimeForm() {
   };
 
   const handleDeleteAllRows = () => {
-    setRows([]); // Supprimer toutes les lignes
-    setRows([{ day: new Date().toISOString().split('T')[0], startTime: '00:00', endTime: '20:00', isValid: true, errorMessage: null, dateError: null }]); // Ajouter une nouvelle ligne
+    setRows([{ day: new Date().toISOString().split('T')[0], startTime: '00:00', endTime: '20:00', isValid: true, errorMessage: null, dateError: null }]);
   };
 
   const handleRowChange = <K extends keyof TimeRow>(index: number, field: K, value: TimeRow[K]) => {
