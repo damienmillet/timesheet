@@ -17,6 +17,7 @@ export default function TimeForm() {
   const [totalTime, setTotalTime] = useState<string | null>(null);
   const [globalErrorMessage, setGlobalErrorMessage] = useState<string | null>(null);
   const [includeWeekends, setIncludeWeekends] = useState<boolean>(false);
+  const [conservTime, setConservTime] = useState<boolean>(true);
 
   // Ajout d'un event listener pour Ctrl + "+"
   useEffect(() => {
@@ -34,8 +35,8 @@ export default function TimeForm() {
   const handleAddRow = () => {
     const newRow: TimeRow = {
       day: new Date().toISOString().split('T')[0], // Format YYYY-MM-DD
-      startTime: '00:00',
-      endTime: '20:00',
+      startTime: conservTime ? rows[rows.length - 1].startTime : '00:00',
+      endTime: conservTime ? rows[rows.length - 1].endTime : '20:00',
       isValid: true,
       errorMessage: null,
       dateError: null
@@ -137,14 +138,25 @@ export default function TimeForm() {
     <div>
       <div className="p-6 max-w-2xl mx-auto bg-white rounded-lg shadow-md">
         <form onSubmit={calculateTotalTime}>
-          <div className="flex items-center mb-4">
-            <input
-              type="checkbox"
-              checked={includeWeekends}
-              onChange={() => setIncludeWeekends(!includeWeekends)}
-              className="mr-2"
-            />
-            <label>Weekend</label>
+          <div className="flex items-center mb-4 justify-between">
+            <div>
+              <input
+                type="checkbox"
+                checked={includeWeekends}
+                onChange={() => setIncludeWeekends(!includeWeekends)}
+                className="mr-2"
+              />
+              <label>Weekend</label>
+            </div>
+            <div>
+              <input
+                type="checkbox"
+                checked={conservTime}
+                onChange={() => setConservTime(!conservTime)}
+                className="mr-2"
+              />
+              <label>Conserver les heures</label>
+            </div>
           </div>
 
           <table className="min-w-full table-auto border-collapse border border-gray-300">
