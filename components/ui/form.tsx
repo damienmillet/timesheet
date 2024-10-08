@@ -65,6 +65,10 @@ export default function TimeForm() {
     setRows(newRows);
   };
 
+  const sortRowsByDate = (rows: TimeRow[]) => {
+    return rows.sort((a, b) => new Date(a.day).getTime() - new Date(b.day).getTime());
+  };
+
   const handleDeleteAllRows = () => {
     setRows([]); // Supprimer toutes les lignes
     setRows([{ day: new Date().toISOString().split('T')[0], startTime: '00:00', endTime: '20:00', isValid: true, errorMessage: null, dateError: null }]); // Ajouter une nouvelle ligne
@@ -176,6 +180,7 @@ export default function TimeForm() {
                       type="date"
                       value={row.day}
                       onChange={(e) => handleRowChange(index, 'day', e.target.value)}
+                      onBlur={() => setRows(sortRowsByDate([...rows]))}
                       className={`border ${row.dateError ? 'border-red-500' : 'border-gray-300'} rounded p-2 w-full focus:ring focus:ring-indigo-200 transition`}
                     />
                     {row.dateError && <p className="text-red-500 text-sm mt-1">{row.dateError}</p>}
